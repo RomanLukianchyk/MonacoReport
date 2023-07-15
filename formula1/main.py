@@ -10,7 +10,8 @@ def transcript_abbreviations():
                 abbreviations[abbreviation] = (full_name, team)
         return abbreviations
 
-def build_report():
+
+def build_report(folder_path):
     start_values = {}
     end_values = {}
     best_time_report = {}
@@ -54,10 +55,23 @@ def build_report():
 
     return best_time_report
 
+def get_driver_statistics(best_racers_list, driver_name):
+    for racer_id, (time, full_name, team) in best_racers_list:
+        if full_name.lower() == driver_name.lower():
+            return f"Гонщик: {full_name}\nКоманда: {team}\nЛучшее время: {time}"
+    return None
 
-if __name__ == "__main__":
-    best_racers_list = build_report()
+
+def print_report(best_racers_list):
     print("Best time for each racer:")
     for index, (racer_id, (time, full_name, team)) in enumerate(best_racers_list, start=1):
         print(f"{index}. {full_name.ljust(20)}| {team.ljust(30)}| {time}")
+        if index >=10:
+            break
+
+
+
+if __name__ == "__main__":
+    best_racers_list = build_report()
+    print_report(best_racers_list)
 
