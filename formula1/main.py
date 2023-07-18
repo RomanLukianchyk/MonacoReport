@@ -1,4 +1,6 @@
 import datetime
+import os
+import sys
 
 def transcript_abbreviations():
     abbreviations = {}
@@ -12,6 +14,21 @@ def transcript_abbreviations():
 
 
 def build_report(folder_path):
+    start_file_path = os.path.join(folder_path, 'start.txt')
+    end_file_path = os.path.join(folder_path, 'end.txt')
+
+    if not os.path.exists(start_file_path) and not os.path.exists(end_file_path):
+        print("Файлы start.txt и end.txt не найдены.")
+        return []
+
+    if not os.path.exists(start_file_path):
+        print("Файл start.txt не найден.")
+        return []
+
+    if not os.path.exists(end_file_path):
+        print("Файл end.txt не найден.")
+        return []
+
     start_values = {}
     end_values = {}
     best_time_report = {}
@@ -63,10 +80,14 @@ def get_driver_statistics(best_racers_list, driver_name):
 
 
 def print_report(best_racers_list):
+    if not best_racers_list:
+        print("No best racers found.")
+        sys.exit()
+
     print("Best time for each racer:")
     for index, (racer_id, (time, full_name, team)) in enumerate(best_racers_list, start=1):
         print(f"{index}. {full_name.ljust(20)}| {team.ljust(30)}| {time}")
-        if index >=10:
+        if index >= 10:
             break
 
 
