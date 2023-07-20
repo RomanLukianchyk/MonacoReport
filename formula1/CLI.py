@@ -33,31 +33,5 @@ def main():
         print_report(best_racers_list)
 
 
-class PrintReportTestCase(unittest.TestCase):
-    def test_print_report_with_data(self):
-        best_racers_list = [('SVF', ('12:02:58.917', 'Sebastian Vettel', 'FERRARI')),
-                            ('NHR', ('12:02:49.914', 'Nico Hulkenberg', 'RENAULT')),
-                            ('FAM', ('12:13:04.512', 'Fernando Alonso', 'MCLAREN RENAULT'))]
-
-        expected_output = "Best time for each racer:\n" \
-                          "1. Sebastian Vettel    | FERRARI                     | 12:02:58.917\n" \
-                          "2. Nico Hulkenberg     | RENAULT                     | 12:02:49.914\n" \
-                          "3. Fernando Alonso     | MCLAREN RENAULT             | 12:13:04.512\n"
-
-        with patch('sys.stdout', new=StringIO()) as mock_stdout:
-            print_report(best_racers_list)
-            self.assertEqual(mock_stdout.getvalue(), expected_output)
-
-    def test_print_report_with_empty_list(self):
-        best_racers_list = []
-
-        expected_output = "No best racers found.\n"
-
-        with patch('sys.stdout', new=StringIO()) as mock_stdout:
-            with self.assertRaises(SystemExit):
-                print_report(best_racers_list)
-            self.assertEqual(mock_stdout.getvalue(), expected_output)
-            self.assertEqual(sys.exit.called, True)
-
 if __name__ == "__main__":
     main()

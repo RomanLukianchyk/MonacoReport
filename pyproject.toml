@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "MonacoReportForTexting"
+version = "0.0.1"
+authors = [
+  { name = "Roman Lukianchyk", email = "19arrow19@gmail.com" },
+]
+description = "Отчет о гонках в Монако. Считывает данные из .txt файлов и строит отчет с лучшими временами для каждого гонщика."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
