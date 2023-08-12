@@ -63,4 +63,11 @@ def build_report(directory, driver_name=None, sort_order="asc"):
         elif sort_order == "desc":
             best_time_report = sorted(best_time_report.items(), key=lambda x: x[1], reverse=True)
 
-    return best_time_report
+    if driver_name:
+        driver_stats = get_driver_statistics(best_time_report, driver_name)
+        if driver_stats:
+            return best_time_report, driver_stats
+        else:
+            return None, None
+    else:
+        return best_time_report, None

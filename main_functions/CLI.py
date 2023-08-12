@@ -1,5 +1,5 @@
 import argparse
-from building_report import build_report, get_driver_statistics
+from building_report import build_report
 from printing_report import print_report
 
 def main_cli():
@@ -16,13 +16,14 @@ def main_cli():
         return
 
     if args.driver:
-        driver_stats = get_driver_statistics(build_report(args.files, args.driver, args.sort_order), args.driver)
-        if driver_stats:
-            print_report(build_report(args.files, args.driver, args.sort_order), driver_stats)
+        racers_report, driver_stats = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
+        if racers_report:
+            print_report(racers_report, driver_stats)
         else:
             print(f"Статистика для гонщика '{args.driver}' не найдена.")
     else:
-        print_report(build_report(args.files, sort_order=args.sort_order))
+        racers_report, _ = build_report(args.files, sort_order=args.sort_order)
+        print_report(racers_report)
 
 
 def parse_arguments():
