@@ -1,6 +1,6 @@
 import argparse
-from building_report import build_report
-from printing_report import print_report
+from main_functions.building_report import build_report
+from main_functions.printing_report import print_report
 
 def main_cli():
     args = parse_arguments()

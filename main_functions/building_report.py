@@ -1,9 +1,9 @@
 import datetime
-from file_operations import transcript_abbreviations, get_full_file_path
+from main_functions.file_operations import transcript_abbreviations, get_full_file_path
 
 
 def get_driver_statistics(best_racers_list, driver_name):
-    for racer_id, (time, full_name, team) in best_racers_list:
+    for racer_id, (time, full_name, team) in best_racers_list.items():
         if full_name.lower() == driver_name.lower():
             return {
                 'name': full_name,
@@ -16,7 +16,7 @@ def get_driver_statistics(best_racers_list, driver_name):
 def parse_racer_line(line):
     racer_id = line[:3]
     racer_date = line[3:13]
-    racer_time = line[15:]
+    racer_time = line[14:]
     datetime_string = racer_date + '_' + racer_time
     datetime_format = "%Y-%m-%d_%H:%M:%S.%f"
     racer_datetime = datetime.datetime.strptime(datetime_string, datetime_format)
