@@ -1,5 +1,5 @@
 import datetime
-from main_functions.file_operations import transcript_abbreviations, get_full_file_path
+from file_operations import transcript_abbreviations, get_full_file_path
 
 
 def get_driver_statistics(best_racers_list, driver_name):

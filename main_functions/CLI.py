@@ -1,29 +1,20 @@
 import argparse
-from main_functions.building_report import build_report
-from main_functions.printing_report import print_report
+from building_report import build_report
+from printing_report import print_report
 
 def main_cli():
     args = parse_arguments()
 
-    if not args.files:
-        print("Пожалуйста, укажите путь к папке с файлами start.txt и end.txt.")
-        return
-
     print(f"Используем папку: {args.files}")
 
-    if not build_report(args.files):
-        print("Нет данных для отчета.")
-        return
+    racers_report, driver_stats = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
 
-    if args.driver:
-        racers_report, driver_stats = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
-        if racers_report:
-            print_report(racers_report, driver_stats)
-        else:
-            print(f"Статистика для гонщика '{args.driver}' не найдена.")
+    if not racers_report:
+        print("Нет данных для отчета.")
+    elif args.driver and driver_stats is None:
+        print(f"Статистика для гонщика '{args.driver}' не найдена.")
     else:
-        racers_report, _ = build_report(args.files, sort_order=args.sort_order)
-        print_report(racers_report)
+        print_report(racers_report, driver_stats)
 
 
 def parse_arguments():
