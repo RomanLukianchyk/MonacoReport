@@ -2,6 +2,7 @@ import argparse
 from building_report import build_report
 from printing_report import print_report
 
+
 def main_cli():
     args = parse_arguments()
 
@@ -15,7 +16,6 @@ def main_cli():
         print(f"Статистика для гонщика '{args.driver}' не найдена.")
     else:
         print_report(racers_report, driver_stats)
-
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Утилита для обработки отчетов о гонках на автодроме Монако")
