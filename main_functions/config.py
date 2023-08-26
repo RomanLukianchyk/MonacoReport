@@ -1,2 +1,3 @@
 DATETIME_FORMAT = "%Y-%m-%d_%H:%M:%S.%f"
+NUM_TOP_RACERS = 10
 

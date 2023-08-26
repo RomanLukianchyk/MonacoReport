@@ -18,6 +18,15 @@ def read_file_values(file_path):
     return values
 
 
+def read_file_lines(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            return lines
+    except FileNotFoundError:
+        print(f"Файл '{file_path}' не найден.")
+
+
 def parse_racer_line(line):
     racer_id = line[:3]
     racer_date = line[3:13]
@@ -45,12 +54,11 @@ def read_abbreviation_file(directory):
     abbreviations_path = get_full_file_path(directory, "abbreviations.txt")
     abbreviations = {}
 
-    with open(abbreviations_path, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                abbreviation, full_name, team = line.split('_')
-                abbreviations[abbreviation] = (full_name, team)
+    for line in read_file_lines(abbreviations_path):
+        line = line.strip()
+        if line:
+            abbreviation, full_name, team = line.split('_')
+            abbreviations[abbreviation] = (full_name, team)
 
     return abbreviations
 

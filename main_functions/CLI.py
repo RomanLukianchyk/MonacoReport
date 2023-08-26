@@ -17,6 +17,7 @@ def main_cli():
     else:
         print_report(racers_report, driver_stats)
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Утилита для обработки отчетов о гонках на автодроме Монако")
     parser.add_argument("--files", help="Путь к папке с файлами start.txt и end.txt", required=True)
