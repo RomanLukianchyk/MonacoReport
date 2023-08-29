@@ -8,14 +8,18 @@ def main_cli():
 
     print(f"Используем папку: {args.files}")
 
-    racers_report, driver_stats = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
+    try:
+        racers_report, _ = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
+    except FileNotFoundError as e:
+        print(f"Ошибка: {e}")
+        return
 
     if not racers_report:
         print("Нет данных для отчета.")
-    elif args.driver and driver_stats is None:
+    elif args.driver and racers_report is None:
         print(f"Статистика для гонщика '{args.driver}' не найдена.")
     else:
-        print_report(racers_report, driver_stats)
+        print_report(racers_report)
 
 
 def parse_arguments():
@@ -28,3 +32,5 @@ def parse_arguments():
     parser.add_argument("--driver", help="Показать статистику о конкретном гонщике")
 
     return parser.parse_args()
+
+

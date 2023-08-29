@@ -19,12 +19,9 @@ def read_file_values(file_path):
 
 
 def read_file_lines(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-            return lines
-    except FileNotFoundError:
-        print(f"Файл '{file_path}' не найден.")
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        return lines
 
 
 def parse_racer_line(line):
@@ -37,12 +34,9 @@ def parse_racer_line(line):
 
 
 def read_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            content = file.read()
-            return content
-    except FileNotFoundError:
-        print(f"Файл '{file_path}' не найден.")
+    with open(file_path, 'r') as file:
+        content = file.read()
+        return content
 
 
 def get_full_file_path(directory, file_name):

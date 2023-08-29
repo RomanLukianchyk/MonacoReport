@@ -1,19 +1,11 @@
 from file_operations import read_start_file, read_abbreviation_file, read_end_file
 
 
-def get_driver_statistics(best_racers_list, driver_key):
-    time, full_name, team = best_racers_list[driver_key]
-    return {
-        'name': full_name,
-        'team': team,
-        'time': time
-    }
-
-
 def find_driver(abbreviations, driver_name):
     for abbreviation, (full_name, _) in abbreviations.items():
         if full_name == driver_name:
             return abbreviation, full_name
+    raise ValueError(f"Гонщик с именем '{driver_name}' не найден.")
 
 
 def build_report(directory, driver_name=None, sort_order="asc"):
@@ -24,20 +16,18 @@ def build_report(directory, driver_name=None, sort_order="asc"):
     best_time_report = {}
 
     if driver_name:
-        found_driver = False
-        for driver_key, (full_name, team) in abbreviations.items():
-            time_report = start_values.get(driver_key)
-            if driver_key in end_values and time_report >= end_values[driver_key]:
-                best_time_report[driver_key] = ("ERROR!", full_name, team)
-            else:
-                formatted_time_report = time_report.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-                best_time_report[driver_key] = (formatted_time_report, full_name, team)
-        if not found_driver:
-            return {}, None
+        try:
+            driver_key, full_name = find_driver(abbreviations, driver_name)
+        except ValueError as e:
+            print(e)
+            return
+
+        time_report = start_values.get(driver_key)
+        if driver_key in end_values and time_report >= end_values[driver_key]:
+            best_time_report[driver_key] = ("ERROR!", full_name, abbreviations[driver_key][1])
         else:
-            driver_key = next(iter(best_time_report))
-            driver_stats = get_driver_statistics(best_time_report, driver_key)
-            return best_time_report, driver_stats
+            formatted_time_report = time_report.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            best_time_report[driver_key] = (formatted_time_report, full_name, abbreviations[driver_key][1])
     else:
         for driver_key, (full_name, team) in abbreviations.items():
             time_report = start_values.get(driver_key)
@@ -47,5 +37,5 @@ def build_report(directory, driver_name=None, sort_order="asc"):
                 formatted_time_report = time_report.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
                 best_time_report[driver_key] = (formatted_time_report, full_name, team)
 
-        best_time_report = dict(sorted(best_time_report.items(), key=lambda x: x[1], reverse=(sort_order == "desc")))
-        return best_time_report, None
+    best_time_report = dict(sorted(best_time_report.items(), key=lambda x: x[1], reverse=(sort_order == "desc")))
+    return best_time_report, None
