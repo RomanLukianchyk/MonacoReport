@@ -1,7 +1,8 @@
 import argparse
+import sys
+
 from building_report import build_report
 from printing_report import print_report
-
 
 def main_cli():
     args = parse_arguments()
@@ -9,18 +10,20 @@ def main_cli():
     print(f"Используем папку: {args.files}")
 
     try:
-        racers_report, _ = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
+        best_racers, invalid_racers = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
     except FileNotFoundError as e:
         print(f"Ошибка: {e}")
         return
 
-    if not racers_report:
-        print("Нет данных для отчета.")
-    elif args.driver and racers_report is None:
-        print(f"Статистика для гонщика '{args.driver}' не найдена.")
+    if not best_racers:
+        print("Лучшее время для каждого нщика:")
+        print_report(invalid_racers)
+        sys.exit()
     else:
-        print_report(racers_report)
-
+        print("Лучшее время:")
+        print_report(best_racers)
+        print("Гонщики с неправильным временем:")
+        print_report(invalid_racers)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Утилита для обработки отчетов о гонках на автодроме Монако")

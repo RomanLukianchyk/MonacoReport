@@ -8,18 +8,14 @@ def format_racer_info(index, full_name, team, time):
 
 def print_report(best_racers_list):
     if not best_racers_list:
-        print("Нет лучших гонщиков.")
+        print("Список пуст.")
         sys.exit()
-
-    print("Лучшее время для каждого гонщика:")
 
     for index, (driver_key, (time, full_name, team)) in enumerate(best_racers_list.items(), start=1):
         full_name = full_name if full_name else ""
         team = team if team else ""
 
         line = format_racer_info(index, full_name, team, time)
-        if time == "ERROR!":
-            line += " (Ошибка: время финиша меньше времени старта)"
 
         print(line)
 
