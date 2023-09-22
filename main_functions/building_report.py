@@ -1,11 +1,18 @@
-from file_operations import read_start_file, read_abbreviation_file, read_end_file
+from main_functions.file_operations import read_start_file, read_abbreviation_file, read_end_file
+
+
+class FoundingDriverError(Exception):
+    def __init__(self, driver_name):
+        self.driver_name = driver_name
+        self.messege = f"Гонщик с именем '{driver_name}' не найден."
+        super().__init__(self.messege)
 
 
 def find_driver(abbreviations, driver_name):
     for abbreviation, (full_name, _) in abbreviations.items():
         if full_name == driver_name:
             return abbreviation, full_name
-    raise ValueError(f"Гонщик с именем '{driver_name}' не найден.")
+    raise FoundingDriverError(driver_name)
 
 
 def build_report(directory, driver_name=None, sort_order="asc"):

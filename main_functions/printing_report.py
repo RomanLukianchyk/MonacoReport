@@ -1,5 +1,5 @@
 import sys
-from config import NUM_TOP_RACERS
+from main_functions.config import NUM_TOP_RACERS
 
 
 def format_racer_info(index, full_name, team, time):

@@ -1,8 +1,8 @@
 import argparse
 import sys
+from main_functions.building_report import build_report, FoundingDriverError
+from main_functions.printing_report import print_report
 
-from building_report import build_report
-from printing_report import print_report
 
 def main_cli():
     args = parse_arguments()
@@ -14,9 +14,12 @@ def main_cli():
     except FileNotFoundError as e:
         print(f"Ошибка: {e}")
         return
+    except FoundingDriverError as e:
+        print(f"Ошибка: {e}")
+        return
 
     if not best_racers:
-        print("Лучшее время для каждого нщика:")
+        print("Лучшее время для каждого гонщика:")
         print_report(invalid_racers)
         sys.exit()
     else:
@@ -24,6 +27,7 @@ def main_cli():
         print_report(best_racers)
         print("Гонщики с неправильным временем:")
         print_report(invalid_racers)
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Утилита для обработки отчетов о гонках на автодроме Монако")

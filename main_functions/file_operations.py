@@ -1,20 +1,40 @@
 import os
 import datetime
-from config import DATETIME_FORMAT
+import sys
+from main_functions.config import DATETIME_FORMAT
+
+
+class FilesEmpty(Exception):
+    def __init__(self, message="Файл пуст или не содержит записей."):
+        super().__init__(message)
+
+
+class InvalidAbbreviationError(Exception):
+    def __init__(self, message="Неправильная аббревиатура"):
+        super().__init__(message)
+        print(message)
+        sys.exit(1)
 
 
 def read_file_values(file_path):
     values = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                racer_id, racer_datetime = parse_racer_line(line)
-                if racer_id not in values:
-                    values[racer_id] = racer_datetime
-                else:
-                    if racer_datetime < values[racer_id]:
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            if not lines:
+                raise FilesEmpty()
+            for line in lines:
+                line = line.strip()
+                if line:
+                    racer_id, racer_datetime = parse_racer_line(line)
+                    if racer_id not in values:
                         values[racer_id] = racer_datetime
+                    else:
+                        if racer_datetime < values[racer_id]:
+                            values[racer_id] = racer_datetime
+    except FileNotFoundError as e:
+        raise e
+
     return values
 
 
@@ -52,16 +72,30 @@ def read_abbreviation_file(directory):
         line = line.strip()
         if line:
             abbreviation, full_name, team = line.split('_')
+            if not is_valid_abbreviation(abbreviation):
+                raise InvalidAbbreviationError()
             abbreviations[abbreviation] = (full_name, team)
 
     return abbreviations
 
 
+def is_valid_abbreviation(abbreviation):
+    return abbreviation[:3].isalpha() and abbreviation[:3].isupper()
+
+
 def read_start_file(directory):
     start_path = get_full_file_path(directory, "start.txt")
-    return read_file_values(start_path)
+    try:
+        return read_file_values(start_path)
+    except FilesEmpty as e:
+        print(e)
+        sys.exit(1)
 
 
 def read_end_file(directory):
     end_path = get_full_file_path(directory, "end.txt")
-    return read_file_values(end_path)
+    try:
+        return read_file_values(end_path)
+    except FilesEmpty as e:
+        print(e)
+        sys.exit(1)
