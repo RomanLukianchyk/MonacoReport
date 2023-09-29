@@ -1,5 +1,7 @@
 import argparse
+import os
 import sys
+
 from main_functions.building_report import build_report, FoundingDriverError
 from main_functions.printing_report import print_report
 
@@ -12,7 +14,8 @@ def main_cli():
     try:
         best_racers, invalid_racers = build_report(args.files, driver_name=args.driver, sort_order=args.sort_order)
     except FileNotFoundError as e:
-        print(f"Ошибка: {e}")
+        file_name = os.path.basename(str(e).split(":")[-1].strip())
+        print(f"Ошибка: Не найден фай: {file_name}")
         return
     except FoundingDriverError as e:
         print(f"Ошибка: {e}")
@@ -20,13 +23,15 @@ def main_cli():
 
     if not best_racers:
         print("Лучшее время для каждого гонщика:")
-        print_report(invalid_racers)
-        sys.exit()
+        if invalid_racers:
+            print_report(invalid_racers)
+        return
     else:
         print("Лучшее время:")
         print_report(best_racers)
-        print("Гонщики с неправильным временем:")
-        print_report(invalid_racers)
+        if invalid_racers:
+            print("Гонщики с неправильным временем:")
+            print_report(invalid_racers)
 
 
 def parse_arguments():

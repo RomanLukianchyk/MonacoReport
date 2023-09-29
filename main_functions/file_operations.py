@@ -10,7 +10,7 @@ class FilesEmpty(Exception):
 
 
 class InvalidAbbreviationError(Exception):
-    def __init__(self, message="Неправильная аббревиатура"):
+    def __init__(self, message="Неправильная аббревиатура в файле abbreviation.txt"):
         super().__init__(message)
         print(message)
         sys.exit(1)

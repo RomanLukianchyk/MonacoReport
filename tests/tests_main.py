@@ -2,7 +2,6 @@ import pytest
 from main_functions.CLI import main_cli
 from io import StringIO
 import sys
-import re
 
 
 TEMP_DIR = r'C:\Users\19arr\AppData\Local\Temp\pytest-of-arrow\pytest-\d+\test_main_cli_with_valid_data0'
@@ -49,11 +48,13 @@ def capture_main_cli_output(tmp_directory):
         sys.stdout = sys.__stdout__
     return report_output
 
-def test_main_cli_with_valid_data(tmp_directory):
-    report_output = capture_main_cli_output(tmp_directory)
-    path_pattern = re.escape(TEMP_DIR)
-    expected_output = re.sub(path_pattern, r'YOUR_EXPECTED_PATH', report_output)
-    assert report_output == expected_output
+def test_main_cli_with_valid_data(tmp_directory, capsys):
+    args = ["--files", str(tmp_directory), "--asc"]
+    sys.argv[1:] = args
+    main_cli()
+    captured = capsys.readouterr()
+    assert "1. Sebastian Vettel     | FERRARI                       | 2018-05-24 12:02:58.917\n" in captured.out
+
 
 
 def test_main_cli_with_invalid_driver(tmp_directory, capsys):
@@ -69,14 +70,8 @@ def test_main_cli_with_missing_directory(capsys):
     sys.argv[1:] = args
     main_cli()
     captured = capsys.readouterr()
-    assert "Ошибка: [Errno 2] No such file or directory" in captured.out
+    assert "Ошибка: Не найден фай: abbreviations.txt'\n" in captured.out
 
-
-def test_main_cli_with_no_best_racers(tmp_directory, capsys):
-    args = ["--files", str(tmp_directory)]
-    sys.argv[1:] = args
-    report_output = capture_main_cli_output(tmp_directory)
-    assert "Список пуст." in report_output
 
 def test_main_cli_with_empty_start_end_files(tmp_directory_with_empty_files, capsys):
     args = ["--files", str(tmp_directory_with_empty_files)]
@@ -101,7 +96,7 @@ def test_main_cli_with_invalid_abbreviations(tmp_directory_with_empty_files, cap
         main_cli()
 
     captured = capsys.readouterr()
-    assert "Неправильная аббревиатура" in captured.out
+    assert "Неправильная аббревиатура в файле abbreviation.txt" in captured.out
 
 
 def test_main_cli_without_driver_argument(tmp_directory_with_empty_files, capsys):

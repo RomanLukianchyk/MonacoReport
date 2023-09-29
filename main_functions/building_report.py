@@ -30,11 +30,13 @@ def build_report(directory, driver_name=None, sort_order="asc"):
 
     for driver_key, (full_name, team) in abbreviations.items():
         time_report = start_values.get(driver_key)
-        if driver_key in end_values and time_report >= end_values[driver_key]:
-            invalid_racers_report[driver_key] = ("ERROR! Время финиша меньше времени старта", full_name, team)
-        else:
-            formatted_time_report = time_report.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-            best_time_report[driver_key] = (formatted_time_report, full_name, team)
+
+        if time_report is not None:
+            if driver_key in end_values and time_report >= end_values[driver_key]:
+                invalid_racers_report[driver_key] = ("ERROR! Время финиша меньше времени старта", full_name, team)
+            else:
+                formatted_time_report = time_report.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+                best_time_report[driver_key] = (formatted_time_report, full_name, team)
 
     best_time_report = dict(sorted(best_time_report.items(), key=lambda x: x[1], reverse=(sort_order == "desc")))
     return best_time_report, invalid_racers_report
